@@ -392,6 +392,12 @@ error will trigger.
 -}
 
 -- >>> 1 + 2 + 3 + error "Here!"
+-- Here!
+
+{-
+error: like exception in other languages, usually used at the points that are non-reachable
+for above example, reached "Here!" because plus is non-lazy (strict)
+-}
 
 {-
 However, we won't trigger an error that is in dead code, such as in
@@ -527,7 +533,7 @@ Obligatory Hello World
 ----------------------
 
 "IO actions" are a new sort of sort of value that describe an effect
-on the world.
+on the world. Impure operations.
 
     IO a  --  Type of an action that returns an `a`  (a can be anything!)
 
@@ -897,7 +903,13 @@ error if it is ever evaluated.
 -}
 
 jn' :: Maybe (Maybe a) -> Maybe a
-jn' = undefined
+jn' (Just (Just x)) = Just x
+jn' _ = Nothing
+
+-- lazier than above
+jn'' :: Maybe (Maybe a) -> Maybe a
+jn'' (Just x) = x
+jn'' Nothing = Nothing
 
 {-
 Lists
@@ -1141,7 +1153,7 @@ range :: Int -> Int -> [Int]
 \**Step 3**: Define the function. This part is for you to do for your quiz.
 -}
 
-range i j = undefined
+range i j = if i > j then [] else i : range (i + 1) j
 
 {-
 \**Step 4**: Run the tests.
@@ -1349,7 +1361,8 @@ listIncr :: [Int] -> [Int]
 \**Step 3**: Define the function.
 -}
 
-listIncr = undefined
+listIncr [] = []
+listIncr (x : xs) = x + 1 : listIncr xs
 
 {-
 \**Step 4**: Run the tests.
